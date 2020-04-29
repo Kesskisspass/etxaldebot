@@ -12,3 +12,4 @@ Enfin, après analyse des produits recherchés par l'utilisateur, le chatbot doi
 - Pour effectuer les recommandations aux utilisateurs: utilisation d'un modèle de machine learning
 
 ## Schéma:
+![schema](images/schema_chatbot.png)
