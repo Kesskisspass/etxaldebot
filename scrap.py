@@ -23,9 +23,31 @@ for link in links:
             urls.append(web)
     except:
         pass
-    
+
 # Les 5 premières sont celles du menu de navigation
 urls = urls[5:]
-print(len(urls))
-for i in urls:
-    print(i)
+#print(len(urls))
+
+# test page Bayonne
+result = requests.get('https://www.lekukoa.com/bayonne')
+src = result.content
+soup = BeautifulSoup(src,'lxml')
+fiches = soup.find_all("div", {"class":"mc1inlineContent"})
+producteurs = []
+for fiche in fiches:
+    producteurs.append(fiche)
+
+for prod in producteurs:
+    name = prod.find("span", {"style":"font-family:poppins-semibold,poppins,sans-serif;"})
+    paras = prod.find_all("p")
+    try:
+        i = 0
+        for para in paras:
+            para = para.text
+            if para != "":
+                print(i, para)
+                i += 1
+        print("---")
+    except:
+        pass
+    
