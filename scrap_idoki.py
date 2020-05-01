@@ -24,6 +24,27 @@ for url in urls_prod:
     for link in prods.find_all('a'):
         links.append(link.get('href'))
 
-print(len(links))
-
 # Penser à rajouter la base url: https://www.producteurs-fermiers-pays-basque.fr/
+
+# Création d'un csv qui regroupe toutes les infos producteur
+import csv
+
+with open('producteurs.csv', 'w', newline='') as f:
+    fieldnames = ['nom','maison']
+    writer = csv.DictWriter(f,fieldnames=fieldnames)
+    writer.writeheader()
+    
+    for link in links:
+        link = 'https://www.producteurs-fermiers-pays-basque.fr/' + link
+        result = requests.get(link)
+        src = result.content
+        soup = BeautifulSoup(src,'lxml')
+        infos = soup.find("div", attrs={u"class":"description"})
+
+        # Récupérer les infos producteur dans un dico
+        dico = {}
+        dico['nom'] = infos.find("h1").text
+        dico['maison'] = infos.find("h3").text
+
+        # Ajout au fichier csv
+        writer.writerow(dico)
