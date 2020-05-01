@@ -47,7 +47,7 @@ for prod in producteurs:
             if para != "":
                 print(i, para)
                 i += 1
-        print("---")
+        print("\n-----\n")
     except:
         pass
     
