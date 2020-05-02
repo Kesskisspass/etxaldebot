@@ -15,7 +15,7 @@ def find_commune(name):
                 flag = True
                 return(float(row['latitude']),float(row['longitude']))
         if (flag == False):
-            return("Commune non trouvée")
+            print("Commune non trouvée")
 
 # Test calcul distance avec deux communes
 c1 = input("Veuillez entrer le nom de la première commune:\n")
