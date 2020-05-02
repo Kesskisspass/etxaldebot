@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import csv
 
 # Récupération de toutes les urls des pages producteurs
 urls_prod = []
@@ -24,10 +25,7 @@ for url in urls_prod:
     for link in prods.find_all('a'):
         links.append(link.get('href'))
 
-# Penser à rajouter la base url: https://www.producteurs-fermiers-pays-basque.fr/
-
 # Création d'un csv qui regroupe toutes les infos producteur
-import csv
 
 with open('producteurs.csv', 'w', newline='') as f:
     fieldnames = ['nom','maison','mail','tel','code_postal','village','produits']
