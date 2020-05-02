@@ -30,7 +30,7 @@ for url in urls_prod:
 import csv
 
 with open('producteurs.csv', 'w', newline='') as f:
-    fieldnames = ['nom','maison','mail','tel','code_postal','village']
+    fieldnames = ['nom','maison','mail','tel','code_postal','village','produits']
     writer = csv.DictWriter(f,fieldnames=fieldnames)
     writer.writeheader()
     
@@ -70,5 +70,20 @@ with open('producteurs.csv', 'w', newline='') as f:
         if village:
             village = re.sub(r"( /)|(/)","",village.group())
             dico['village'] = village
+        # Produits
+        for div in soup.find_all("div", attrs={"class":"whitecard row"}):
+            if ('Mes produits' in div.text):
+                try:
+                    prod = div.find_all("li")
+                    produits = []
+                    for produit in prod:
+                        produit = produit.text
+                        produit = re.sub(r"\r","", produit)
+                        produit = re.sub(r"\n"," ", produit)
+                        produit = re.sub(r"  "," ", produit)
+                        produits.append(produit)
+                    dico['produits'] = produits
+                except:
+                    pass
         # Ajout au fichier csv
         writer.writerow(dico)
