@@ -27,8 +27,8 @@ for url in urls_prod:
 
 # Création d'un csv qui regroupe toutes les infos producteur
 
-with open('producteurs.csv', 'w', newline='') as f:
-    fieldnames = ['nom','maison','mail','tel','code_postal','village','produits']
+with open('scrap/producteurs.csv', 'w', newline='') as f:
+    fieldnames = ['nom','maison','mail','tel','code_postal','village','produits','lieux','horaires']
     writer = csv.DictWriter(f,fieldnames=fieldnames)
     writer.writeheader()
     
@@ -83,5 +83,28 @@ with open('producteurs.csv', 'w', newline='') as f:
                     dico['produits'] = produits
                 except:
                     pass
+
+        # Lieux de vente
+        for div in soup.find_all("div", attrs={"class":"whitecard row"}):
+            if ('lieux' in div.text):
+                try:
+                    lieu = div.find_all("li")
+                    lieux = []
+                    for li in lieu:
+                        li = li.text
+                        lieux.append(li)
+                    dico['lieux'] = lieux
+                except:
+                    pass
+        # Vente à la ferme (horaires)
+        for div in soup.find_all("div", attrs={"class":"whitecard row"}):
+            if ('Vente à la ferme' in div.text):
+                try:
+                    horaires = div.find("div", attrs={"class":"col-sm-9"}).text
+                    dico['horaires'] = horaires
+                except:
+                    pass
+
+
         # Ajout au fichier csv
         writer.writerow(dico)
