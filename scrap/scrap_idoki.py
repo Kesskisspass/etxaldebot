@@ -28,7 +28,7 @@ for url in urls_prod:
 # Création d'un csv qui regroupe toutes les infos producteur
 
 with open('scrap/producteurs.csv', 'w', newline='') as f:
-    fieldnames = ['nom','maison','mail','tel','code_postal','village','produits','lieux','horaires']
+    fieldnames = ['nom','maison','mail','tel','code_postal','village','categ_prod','produits','lieux','horaires']
     writer = csv.DictWriter(f,fieldnames=fieldnames)
     writer.writeheader()
     
@@ -41,10 +41,13 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
 
         # Récupérer les infos producteur dans un dico
         dico = {}
+
         # Nom
         dico['nom'] = infos.find("h1").text
+
         # Maison
         dico['maison'] = infos.find("h3").text
+
         # Mail
         mail = infos.find("a")
         mail = str(mail)
@@ -53,24 +56,30 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
         mail = re.sub(r'( </a>)|(</a>)','',mail)
         if ("@" in mail):
             dico['mail'] = mail
+
         # Tel
         tel = re.search(r"(([0-9]+ [0-9]+ [0-9]+ [0-9]+ [0-9]+))",str(infos))
         if tel:
             tel = re.sub(" ","",tel.group())
             dico['tel'] = tel
+
         # Code postal
         code_postal = re.search(r"([0-9][0-9] [0-9][0-9][0-9])|([0-9][0-9][0-9][0-9][0-9])",str(infos))
         if code_postal:
             code_postal = re.sub(" ","",code_postal.group())
             dico['code_postal'] = code_postal
+
         # Village
         village = re.search(r"(([A-ZÏÈÉ\-]+)([A-ZÏÈÉ \-]+)? ?/)|([A-Z]+\-[A-Z]+)", str(infos))
         if village:
             village = re.sub(r"( /)|(/)","",village.group())
             dico['village'] = village
+
         # Produits
         for div in soup.find_all("div", attrs={"class":"whitecard row"}):
             if ('Mes produits' in div.text):
+                
+                # Détail des produits
                 try:
                     prod = div.find_all("li")
                     produits = []
@@ -83,6 +92,17 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
                     dico['produits'] = produits
                 except:
                     pass
+                
+                # Catégorie des produits
+                try:
+                    categ_prod = []
+                    cat = div.find_all("img")
+                    for categ in cat:
+                        categ_prod.append(categ['title'])
+                    dico['categ_prod'] = categ_prod
+                except:
+                    pass
+
 
         # Lieux de vente
         for div in soup.find_all("div", attrs={"class":"whitecard row"}):
@@ -96,6 +116,7 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
                     dico['lieux'] = lieux
                 except:
                     pass
+
         # Vente à la ferme (horaires)
         for div in soup.find_all("div", attrs={"class":"whitecard row"}):
             if ('Vente à la ferme' in div.text):
