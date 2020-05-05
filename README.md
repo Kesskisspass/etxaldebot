@@ -1,8 +1,8 @@
 # EtxaldeBot
 
 ## Résumé: 
-Créer un chatbot qui s'adresse à des utilisateurs du Pays-Basque et qui souhaitent pouvoir rapidement des produits fermiers aux alentours de chez eux.   
-Le chatbot doit pourvoir leur indiquer où et quand trouver les produits recherchés selon différents critères (localisation, produit bio ou pas, type de produit, type de point de vente...)
+Créer un chatbot qui s'adresse à des utilisateurs du Pays-Basque et qui souhaitent pouvoir rapidement chercher et trouver des produits fermiers aux alentours de chez eux.   
+Le chatbot doit pourvoir leur indiquer où (et quan trouver les produits recherchés selon différents critères (localisation, produit bio ou pas, type de produit, type de point de vente...)
 Enfin, après analyse des produits recherchés par l'utilisateur, le chatbot doit pouvoir effectuer des recommandations pour d'autres produits.
 
 ## Outils:

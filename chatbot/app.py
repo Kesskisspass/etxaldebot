@@ -14,7 +14,7 @@ def input_cleaner(text_user):
     text_user = re.sub(r'[ç]','c',text_user)
     return text_user
 
-# Input et réponse
+# Input et réponsekessk
 good_bye = r"au revoir|quit|ciao|hasta la vista|à \+"
 msg_bot = ["Au revoir!", "à bientôt", "à très vite!","ciao ciao"]
 
@@ -29,7 +29,7 @@ msg_salutation = [
 
 
 flag = True
-print("""Bienvenue sur ce super chatbot \nÉcrivez votre question : \nDites moi au revoir pour quitter""")
+print("""Bienvenue, je suis là pour vous aider à trouver des producteurs fermier autour de chez vous \nÉcrivez votre question : \nDites moi au revoir pour quitter""")
 while (flag == True):
     text_user = input("> ")
 
