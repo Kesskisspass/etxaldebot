@@ -25,6 +25,10 @@ for url in urls_prod:
     for link in prods.find_all('a'):
         links.append(link.get('href'))
 
+
+categories_produits = dict()
+localisations = dict()
+
 # Création d'un csv qui regroupe toutes les infos producteur
 
 with open('scrap/producteurs.csv', 'w', newline='') as f:
@@ -75,6 +79,11 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
             village = re.sub(r"( /)|(/)","",village.group())
             dico['village'] = village
 
+            if (village in localisations):
+                pass
+            else:
+                localisations[village] = code_postal
+
         # Produits
         for div in soup.find_all("div", attrs={"class":"whitecard row"}):
             if ('Mes produits' in div.text):
@@ -98,7 +107,15 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
                     categ_prod = []
                     cat = div.find_all("img")
                     for categ in cat:
-                        categ_prod.append(categ['title'])
+                        categorie = categ['title']
+                        categ_prod.append(categorie)
+
+                        if (categorie in categories_produits):
+                            categories_produits[categorie] += 1
+                        else:
+                            categories_produits[categorie] = 1
+                        
+
                     dico['categ_prod'] = categ_prod
                 except:
                     pass
@@ -129,3 +146,20 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
 
         # Ajout au fichier csv
         writer.writerow(dico)
+
+# Création csv des catégories de produits (et nombre de producteurs qui le propose)
+f = open('scrap/categ_prod.csv', 'w', newline='')
+with f:
+    writer = csv.writer(f)
+    writer.writerow(['categorie','nombre'])
+    for cat, nb in categories_produits.items():
+        writer.writerow([cat, nb])
+
+
+# Création csv des localisations
+f = open('scrap/localisations.csv', 'w', newline='')
+with f:
+    writer = csv.writer(f)
+    writer.writerow(['commune','code_postal'])
+    for commune, cp in localisations.items():
+        writer.writerow([commune, cp])
