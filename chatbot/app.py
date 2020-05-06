@@ -14,7 +14,7 @@ def input_cleaner(text_user):
     text_user = re.sub(r'[ç]','c',text_user)
     return text_user
 
-# Input et réponsekessk
+# Inputs et réponses
 good_bye = r"au revoir|quit|ciao|hasta la vista|à \+"
 msg_bot = ["Au revoir!", "à bientôt", "à très vite!","ciao ciao"]
 
@@ -27,9 +27,11 @@ msg_salutation = [
 "Egun On"
 ]
 
+# On stocke les infos utilisateur dans un dico
+user = {'localisation':''}
 
 flag = True
-print("""Bienvenue, je suis là pour vous aider à trouver des producteurs fermier autour de chez vous \nÉcrivez votre question : \nDites moi au revoir pour quitter""")
+print("""Bienvenue, je suis là pour vous aider à trouver des producteurs fermier autour de chez vous \nÉcrivez votre question : \nDites moi au revoir pour quitter \nD'abord dites moi dans quelle commune vous vivez pour que je puisse vous proposer des producteurs près de chez vous:""")
 while (flag == True):
     text_user = input("> ")
 
@@ -41,6 +43,9 @@ while (flag == True):
         print(random.choice(msg_bot))
         flag = False
 
-    # Concerne la salutation (bienvenue)
-    elif (re.fullmatch(inp_salut,text_user)):
-        print(random.choice(msg_salutation))
+
+    # Test localisation
+    else:
+        text_user = text_user.replace('st','saint')
+        text_user = text_user.replace(' ','-')
+        print(text_user)
