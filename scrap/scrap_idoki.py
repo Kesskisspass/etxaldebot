@@ -27,12 +27,11 @@ for url in urls_prod:
 
 
 categories_produits = dict()
-localisations = dict()
 
 # Création d'un csv qui regroupe toutes les infos producteur
 
 with open('scrap/producteurs.csv', 'w', newline='') as f:
-    fieldnames = ['nom','maison','mail','tel','code_postal','village','categ_prod','produits','lieux','horaires']
+    fieldnames = ['nom','maison','mail','tel','code_postal','commune','categ_prod','produits','lieux','horaires']
     writer = csv.DictWriter(f,fieldnames=fieldnames)
     writer.writeheader()
     
@@ -74,15 +73,10 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
             dico['code_postal'] = code_postal
 
         # Village
-        village = re.search(r"(([A-ZÏÈÉ\-]+)([A-ZÏÈÉ \-]+)? ?/)|([A-Z]+\-[A-Z]+)", str(infos))
-        if village:
-            village = re.sub(r"( /)|(/)","",village.group())
-            dico['village'] = village
-
-            if (village in localisations):
-                pass
-            else:
-                localisations[village] = code_postal
+        commune = re.search(r"(([A-ZÏÈÉ\-]+)([A-ZÏÈÉ \-]+)? ?/)|([A-Z]+\-[A-Z]+)", str(infos))
+        if commune:
+            commune = re.sub(r"( /)|(/)","",commune.group())
+            dico['commune'] = commune
 
         # Produits
         for div in soup.find_all("div", attrs={"class":"whitecard row"}):
@@ -154,12 +148,3 @@ with f:
     writer.writerow(['categorie','nombre'])
     for cat, nb in categories_produits.items():
         writer.writerow([cat, nb])
-
-
-# Création csv des localisations
-f = open('scrap/localisations.csv', 'w', newline='')
-with f:
-    writer = csv.writer(f)
-    writer.writerow(['commune','code_postal'])
-    for commune, cp in localisations.items():
-        writer.writerow([commune, cp])

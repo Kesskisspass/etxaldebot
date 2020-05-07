@@ -1,9 +1,23 @@
 # coding: utf8
+import csv
 import re
 import random
 import string
 from textblob import TextBlob
 from textblob_fr import PatternAnalyzer
+
+# Chargements des données dans les csv
+l = open('./localisation/communes_64.csv','r')
+reader = csv.reader(l)
+localisations = {}
+
+# Permet de ne pas intégrer la ligne de header
+#next(reader)
+
+for loc in reader:
+    localisations[loc[3]] = loc[4]
+
+
 
 # Fonction nettoyage input user
 def input_cleaner(text_user):
@@ -12,6 +26,7 @@ def input_cleaner(text_user):
     text_user = re.sub(r'[ù]','u',text_user)
     text_user = re.sub(r'[àâ]','a',text_user)
     text_user = re.sub(r'[ç]','c',text_user)
+    text_user = re.sub(r'[ï]','i',text_user)
     return text_user
 
 # Inputs et réponses
@@ -31,7 +46,7 @@ msg_salutation = [
 user = {'localisation':''}
 
 flag = True
-print("""Bienvenue, je suis là pour vous aider à trouver des producteurs fermier autour de chez vous \nÉcrivez votre question : \nDites moi au revoir pour quitter \nD'abord dites moi dans quelle commune vous vivez pour que je puisse vous proposer des producteurs près de chez vous:""")
+print("""Bienvenue, \nDites 'au revoir' pour quitter \nD'abord dites moi dans quelle commune vous vivez (64 uniquement):""")
 while (flag == True):
     text_user = input("> ")
 
@@ -46,6 +61,10 @@ while (flag == True):
 
     # Test localisation
     else:
-        text_user = text_user.replace('st','saint')
+        text_user = re.sub(r'st ','saint ',text_user)
         text_user = text_user.replace(' ','-')
-        print(text_user)
+        if (text_user in localisations.keys()):
+            user['localisation'] = text_user
+            print("commune reconnue, le code postal est: ", localisations[user['localisation']])
+        else:
+            print("Houston, commune non reconnue")
