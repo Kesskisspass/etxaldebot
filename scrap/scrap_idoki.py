@@ -25,7 +25,6 @@ for url in urls_prod:
     for link in prods.find_all('a'):
         links.append(link.get('href'))
 
-
 categories_produits = dict()
 
 # Création d'un csv qui regroupe toutes les infos producteur
@@ -107,13 +106,11 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
                         if (categorie in categories_produits):
                             categories_produits[categorie] += 1
                         else:
-                            categories_produits[categorie] = 1
-                        
+                            categories_produits[categorie] = 1   
 
                     dico['categ_prod'] = categ_prod
                 except:
                     pass
-
 
         # Lieux de vente
         for div in soup.find_all("div", attrs={"class":"whitecard row"}):
@@ -137,7 +134,6 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
                 except:
                     pass
 
-
         # Ajout au fichier csv
         writer.writerow(dico)
 
@@ -145,6 +141,10 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
 f = open('scrap/categ_prod.csv', 'w', newline='')
 with f:
     writer = csv.writer(f)
-    writer.writerow(['categorie','nombre'])
+    writer.writerow(['categorie','bio','nombre'])
     for cat, nb in categories_produits.items():
-        writer.writerow([cat, nb])
+
+        if (re.search(r'.* bios?',cat)):
+            writer.writerow([cat, 1, nb])
+        else:
+            writer.writerow([cat, 0, nb])

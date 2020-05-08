@@ -10,12 +10,12 @@ cursor = db.cursor()
 cursor.execute("DROP TABLE IF EXISTS localisations")
 
 sql_table = """CREATE TABLE localisations (
-   ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-   NOM  CHAR(50) NOT NULL,
-   NOM_SLUG  CHAR(50) NOT NULL,
-   CODE_POSTAL  CHAR(6),
-   LONGITUDE CHAR(30),  
-   LATITUDE CHAR(30) )"""
+   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+   nom  CHAR(50) NOT NULL,
+   nom_slug  CHAR(50) NOT NULL,
+   code_postal CHAR(6),
+   longitude CHAR(30),  
+   latitude CHAR(30) )"""
 cursor.execute(sql_table)
 
 # Import des lignes en parcourant le csv
@@ -25,8 +25,8 @@ with open('localisation/communes_64.csv', mode='r') as csv_file:
     flag = False
     for row in csv_reader:
 
-        sql_rows = "INSERT INTO localisations(NOM, \
-        NOM_SLUG, CODE_POSTAL, LONGITUDE, LATITUDE) \
+        sql_rows = "INSERT INTO localisations(nom, \
+        nom_slug, code_postal, longitude, latitude) \
         VALUES ('%s', '%s', '%s', '%s', '%s' )" % \
         (row['nom_commune'], row['slug'], row['codepostal'], row['latitude'],row['longitude'])
         
