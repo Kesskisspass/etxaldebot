@@ -59,7 +59,6 @@ with open('scrap/producteurs.csv', mode='r') as csv_file:
                flag = True
                db.rollback()
          except:
-            # Les erreurs proviennent du guillement simple enregistré en bdd, il faut nettoyer en amout
             print('erreur',cat)
             pass
 
