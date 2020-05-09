@@ -1,13 +1,5 @@
 # Création de la table intermediaire producteurs/categ_produits
 
-# TODO
-# pour chaque ligne csv producteurs
-# récupérer id et liste de categ_prod
-## pour chaque elt de liste de categ prod
-## chercher cet elt dans db cat_produits
-## renvoyer id_categ_prod
-## inserer table intermediaire: id_producteur et id_categ_prod
-
 import csv
 import pymysql
 import ast
@@ -37,6 +29,7 @@ with open('scrap/producteurs.csv', mode='r') as csv_file:
        cursor.execute(sql_prod, (row['nom']))
        result = cursor.fetchone()
        prod_id = result[0]
+
        # ast -> Transformation string de bdd en liste python
        for cat in ast.literal_eval(row['categ_prod']):
          cat = cat.lower()
@@ -54,21 +47,11 @@ with open('scrap/producteurs.csv', mode='r') as csv_file:
                cursor.execute(sql_rows)
                db.commit()
             except:
-
-               print("Erreur", cat)
                flag = True
                db.rollback()
          except:
             print('erreur',cat)
             pass
-
-
-
-
-
-
-
-
 
 # deconnection mysql
 db.close()
