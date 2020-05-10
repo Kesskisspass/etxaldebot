@@ -7,9 +7,9 @@ db = pymysql.connect("localhost","root","root","etxaldebot" )
 cursor = db.cursor()
 
 # Création de la table
-cursor.execute("DROP TABLE IF EXISTS localisations")
+cursor.execute("DROP TABLE IF EXISTS communes")
 
-sql_table = """CREATE TABLE localisations (
+sql_table = """CREATE TABLE communes (
    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
    nom  CHAR(50) NOT NULL,
    nom_slug  CHAR(50) NOT NULL,
@@ -25,7 +25,7 @@ with open('localisation/communes_64.csv', mode='r') as csv_file:
     flag = False
     for row in csv_reader:
 
-        sql_rows = "INSERT INTO localisations(nom, \
+        sql_rows = "INSERT INTO communes(nom, \
         nom_slug, code_postal, longitude, latitude) \
         VALUES ('%s', '%s', '%s', '%s', '%s' )" % \
         (row['nom_commune'], row['slug'], row['codepostal'], row['latitude'],row['longitude'])

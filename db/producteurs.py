@@ -35,7 +35,7 @@ sql_table = """CREATE TABLE producteurs (
    tel CHAR(20),
    fk_commune_id INT,
 
-   FOREIGN KEY (fk_commune_id) REFERENCES localisations(id) )"""
+   FOREIGN KEY (fk_commune_id) REFERENCES communes(id) )"""
 cursor.execute(sql_table)
 
 # Import des lignes en parcourant le csv
@@ -47,7 +47,7 @@ with open('scrap/producteurs.csv', mode='r') as csv_file:
     for row in csv_reader:
 
         commune = input_cleaner(row['commune'])
-        sql_loc = "SELECT id FROM localisations l WHERE l.nom_slug LIKE %s"
+        sql_loc = "SELECT id FROM communes c WHERE c.nom_slug LIKE %s"
         cursor.execute(sql_loc, ('%' + commune + '%'))
         result = cursor.fetchone()
         try:
