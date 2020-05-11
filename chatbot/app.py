@@ -102,7 +102,7 @@ while (flag == True):
                         print (prod[0])
                 else:
                     print("Il semble qu'il n'y ait pas de producteur connu dans votre commune")
-                    print("Voulez-vous que je cherche dans les communes autour ?")
+                    print("Voulez-vous que je cherche dans votre canton ?")
                     text_user = input("> ")
                     if (text_user == 'ok'):
                         flag_search_cp = True
