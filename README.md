@@ -11,5 +11,8 @@ Enfin, après analyse des produits recherchés par l'utilisateur, le chatbot doi
 - Création du chatbot: Python
 - Pour effectuer les recommandations aux utilisateurs: utilisation d'un modèle de machine learning
 
-## Schéma:
+## Schéma Fonctionnement Général:
 ![schema](images/schema_chatbot.png)
+
+## Schéma Base de données
+![bdd](images/bdd_etxaldebot.png)
