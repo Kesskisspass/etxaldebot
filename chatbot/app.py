@@ -5,6 +5,12 @@ import random
 import string
 from textblob import TextBlob
 from textblob_fr import PatternAnalyzer
+import pymysql
+
+connection = pymysql.connect(host='localhost',
+                             user='root',
+                             password='root',
+                             db='etxaldebot')
 
 # Chargements des données dans les csv
 l = open('./localisation/communes_64.csv','r')
@@ -46,6 +52,7 @@ msg_salutation = [
 user = {'localisation':''}
 
 flag = True
+flag_search_cp = False
 print("""Bienvenue, \nDites 'au revoir' pour quitter \nD'abord dites moi dans quelle commune vous vivez (64 uniquement):""")
 while (flag == True):
     text_user = input("> ")
@@ -61,14 +68,59 @@ while (flag == True):
 
 
     # Test localisation
-    else:
+    elif(user['localisation']==''):
         text_user = re.sub(r'st ','saint ',text_user)
         text_user = text_user.replace(' ','-')
         if (text_user in localisations.keys()):
             user['localisation'] = text_user
-            print("commune reconnue, le code postal est: ", localisations[user['localisation']])
-            print(user)
+            try:
+                with connection.cursor() as cursor:
+                    # Read a single record
+                    sql = "SELECT `id` FROM `communes` WHERE `nom_slug`=%s"
+                    cursor.execute(sql, (user['localisation'],))
+                    user['loc_id'] = cursor.fetchone()[0]
+                    print("commune reconnue, le code postal est: ", localisations[user['localisation']])
+                    print(user)
+                    print("Je peux vous aider à trouver des producteurs près de chez vous ? OK?")
+            except:
+                pass
         else:
             print("Houston, commune non reconnue")
             user['localisation'] = ''
+            print("""Dites 'au revoir' pour quitter \nSinon dites moi dans quelle commune vous vivez (64 uniquement):""")
+            print(user)
+    else:
+        if (text_user.lower() == 'ok'):
+            with connection.cursor() as cursor:
+                # Read a single record
+                sql = "SELECT p.nom FROM producteurs p WHERE p.fk_commune_id = '%s'"
+                cursor.execute(sql, (user['loc_id'],))
+                result = cursor.fetchall()
+                if (result):
+                    print("Ok voici les producteurs:")
+                    for prod in result:
+                        print (prod[0])
+                else:
+                    print("Il semble qu'il n'y ait pas de producteur connu dans votre commune")
+                    print("Voulez-vous que je cherche dans les communes autour ?")
+                    text_user = input("> ")
+                    if (text_user == 'ok'):
+                        flag_search_cp = True
+                        with connection.cursor() as cursor:
+                            sql = "SELECT p.nom, c.nom \
+                                    FROM producteurs p \
+                                    JOIN communes c \
+                                    ON p.fk_commune_id = c.id \
+                                    WHERE c.code_postal = ( \
+                                    SELECT c.code_postal \
+                                    FROM communes c\
+                                    WHERE c.id = '%s')"
+                            cursor.execute(sql, (user['loc_id'],))
+                            result = cursor.fetchall()
+                            if (result):
+                                print("Ok voici les producteurs:")
+                                for prod in result:
+                                    print (prod[0],"à",prod[1])
+                            else:
+                                print("pas de résultat dans le code-postal") # Chercher avec localisations les moins éloignées
             print(user)
