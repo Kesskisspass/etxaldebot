@@ -49,6 +49,6 @@ print(len(non_reconnus),non_reconnus)
 
 
 # TODO
-# arrossa/ahaxe/amendeuix/oneix/tardets/moncayolle/labastide/lichans -> si le text user est compris dans un nom -> on transforme
-# domintxaine: nom en basque
+# [x] arrossa/ahaxe/amendeuix/oneix/tardets/moncayolle/labastide/lichans -> si le text user est compris dans un nom -> on transforme
+# [x] domintxaine: nom en basque à traduire Domezain-sumberraute
     

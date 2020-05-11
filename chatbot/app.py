@@ -15,7 +15,7 @@ localisations = {}
 #next(reader)
 
 for loc in reader:
-    localisations[loc[3]] = loc[4]
+    localisations[loc[1]] = loc[2]
 
 
 
@@ -56,6 +56,7 @@ while (flag == True):
     # Pour quitter le chatbot
     if (re.search(good_bye, text_user)):
         print(random.choice(msg_bot))
+        print(user)
         flag = False
 
 
@@ -66,5 +67,8 @@ while (flag == True):
         if (text_user in localisations.keys()):
             user['localisation'] = text_user
             print("commune reconnue, le code postal est: ", localisations[user['localisation']])
+            print(user)
         else:
             print("Houston, commune non reconnue")
+            user['localisation'] = ''
+            print(user)
