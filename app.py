@@ -56,7 +56,6 @@ while (flag == True):
         print(user)
         flag = False
 
-
     # Test localisation
     elif(user['localisation'] == ''):
         text_user = find_commune(text_user)
@@ -64,7 +63,6 @@ while (flag == True):
             user['localisation'] = text_user
             try:
                 with connection.cursor() as cursor:
-                    # Read a single record
                     sql = "SELECT `id` FROM `communes` WHERE `nom_slug`=%s"
                     cursor.execute(sql, (user['localisation'],))
                     user['loc_id'] = cursor.fetchone()[0]
