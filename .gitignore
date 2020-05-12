@@ -11,3 +11,5 @@
 settings.json
 
 scrap/test.py
+
+__pycache__
