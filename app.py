@@ -6,6 +6,7 @@ import string
 from textblob import TextBlob
 from textblob_fr import PatternAnalyzer
 import pymysql
+from functions.search import input_cleaner
 
 connection = pymysql.connect(host='localhost',
                              user='root',
@@ -24,20 +25,9 @@ for loc in reader:
     localisations[loc[1]] = loc[2]
 
 
-
-# Fonction nettoyage input user
-def input_cleaner(text_user):
-    text_user = text_user.lower()
-    text_user = re.sub(r'[éèê]','e',text_user)
-    text_user = re.sub(r'[ù]','u',text_user)
-    text_user = re.sub(r'[àâ]','a',text_user)
-    text_user = re.sub(r'[ç]','c',text_user)
-    text_user = re.sub(r'[ï]','i',text_user)
-    return text_user
-
 # Inputs et réponses
 good_bye = r"au revoir|quit|ciao|hasta la vista|à \+"
-msg_bot = ["Au revoir!", "à bientôt", "à très vite!","ciao ciao"]
+msg_bot = ["au revoir", "a bientot", "a tres vite","ciao ciao"]
 
 inp_salut = r"bonjour.*?|salut.*?|.ep.*?|yo.*?|coucou.*?"
 msg_salutation = [

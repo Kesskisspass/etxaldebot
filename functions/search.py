@@ -2,6 +2,8 @@ import csv
 import re
 from math import acos, cos, sin, radians
 
+# TODO : Utiliser les données en bdd plutot que les csv
+
 # Fonction qui renvoie une entrée "nettoyée"
 def input_cleaner(text):
     text = text.lower()
@@ -44,6 +46,7 @@ def find_commune(text):
                 text = None
     return text
 
+# Fonction qui retourne les coordonnées GPS (distance)
 def return_coord(commune):
     commune = find_commune(commune)
     with open('localisation/communes_64.csv', mode='r') as csv_file:
