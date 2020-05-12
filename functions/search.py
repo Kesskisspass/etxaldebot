@@ -40,9 +40,11 @@ def find_commune(text):
         pass
     else:
         for loc in localisations.keys():
-            if(re.search(text,loc)):
-                text = loc
-            else:
+            try:
+                test = re.search(text,loc)
+                if(test):
+                    text = loc
+            except:
                 text = None
     return text
 

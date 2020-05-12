@@ -6,7 +6,7 @@ import string
 from textblob import TextBlob
 from textblob_fr import PatternAnalyzer
 import pymysql
-from functions.search import input_cleaner
+from functions.search import input_cleaner, find_commune
 
 connection = pymysql.connect(host='localhost',
                              user='root',
@@ -26,8 +26,8 @@ for loc in reader:
 
 
 # Inputs et réponses
-good_bye = r"au revoir|quit|ciao|hasta la vista|à \+"
-msg_bot = ["au revoir", "a bientot", "a tres vite","ciao ciao"]
+good_bye = r"(au revoir)|quit|ciao|(hasta la vista)|(a \+)"
+msg_bot = ["Au revoir !", "A bientôt", "A très vite","ciao ciao"]
 
 inp_salut = r"bonjour.*?|salut.*?|.ep.*?|yo.*?|coucou.*?"
 msg_salutation = [
@@ -58,9 +58,8 @@ while (flag == True):
 
 
     # Test localisation
-    elif(user['localisation']==''):
-        text_user = re.sub(r'st ','saint ',text_user)
-        text_user = text_user.replace(' ','-')
+    elif(user['localisation'] == ''):
+        text_user = find_commune(text_user)
         if (text_user in localisations.keys()):
             user['localisation'] = text_user
             try:
@@ -82,7 +81,7 @@ while (flag == True):
     else:
         if (text_user.lower() == 'ok'):
             with connection.cursor() as cursor:
-                # Read a single record
+
                 sql = "SELECT p.nom FROM producteurs p WHERE p.fk_commune_id = '%s'"
                 cursor.execute(sql, (user['loc_id'],))
                 result = cursor.fetchall()
