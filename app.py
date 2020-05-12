@@ -27,7 +27,7 @@ for loc in reader:
 
 # Inputs et réponses
 good_bye = r"(au revoir)|quit|ciao|(hasta la vista)|(a \+)"
-msg_bot = ["Au revoir !", "A bientôt", "A très vite","ciao ciao"]
+msg_bot = ["Au revoir !", "À bientôt", "À très vite","Ciao ciao"]
 
 inp_salut = r"bonjour.*?|salut.*?|.ep.*?|yo.*?|coucou.*?"
 msg_salutation = [
@@ -70,6 +70,7 @@ while (flag == True):
                     print(user)
                     print("Je peux vous aider à trouver des producteurs près de chez vous ? OK?")
             except:
+                print("debug: pas trouvé dans la bdd")
                 pass
         else:
             print("Houston, commune non reconnue")

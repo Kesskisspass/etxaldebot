@@ -13,14 +13,16 @@ def input_cleaner(text):
     text = re.sub(r'[àâ]','a',text)
     text = re.sub(r'[ç]','c',text)
     text = re.sub(r'[ï]','i',text)
-    text = re.sub(r'st ','saint ',text)
-    text = text.replace(' ','-')
     return text
 
 # Fonction qui renvoie une commune ou None si non-trouvée
 def find_commune(text):
     # On nettoie l'entrée
     text = input_cleaner(text)
+    
+    # Quelques spécificité par rapport aux nom de communes
+    text = re.sub(r'st ','saint ',text)
+    text = text.replace(' ','-')
 
     # On traite les cas particuliers
     text = re.sub(r'arrute-charritte','arraute-charritte',text)
