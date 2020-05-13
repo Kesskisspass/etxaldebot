@@ -7,6 +7,7 @@ from textblob import TextBlob
 from textblob_fr import PatternAnalyzer
 import pymysql
 from functions.search import input_cleaner, find_commune
+from flask import Flask, render_template
 
 connection = pymysql.connect(host='localhost',
                              user='root',
