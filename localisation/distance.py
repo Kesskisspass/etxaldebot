@@ -3,7 +3,7 @@ import csv
 
 def find_commune(name):
     with open('localisation/communes_64.csv', mode='r') as csv_file:
-        fieldnames = ['id','id_departement','nom_commune','slug','codepostal','latitude','longitude']
+        fieldnames = ['nom_commune','slug','codepostal','latitude','longitude']
         csv_reader = csv.DictReader(csv_file, fieldnames=fieldnames)
         flag = False
         name = name.lower()

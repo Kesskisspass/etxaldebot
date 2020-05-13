@@ -73,6 +73,3 @@ def find_distance(commune_1,commune_2):
         # Calcul distance
         distance = acos(sin(radians(p1[0]))*sin(radians(p2[0]))+cos(radians(p1[0]))*cos(radians(p2[0]))*cos(radians(p1[1]-p2[1])))*6371
         return distance
-
-
-    
