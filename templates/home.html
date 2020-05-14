@@ -24,12 +24,28 @@
                             <p class="chat pr-3 pl-3 p-1 rounded-pill bg-primary text-white">{{ message[0] }}</p>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3"></div>
-                        <div class="col-9 text-right">
-                            <p class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">{{ message[1] }}</p>
+                    {% for res in message[1] %}
+                        {% if res.type == 'p' %}
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-9 text-right">
+                                <p class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">{{ res.content }}</p>
+                            </div>
                         </div>
-                    </div>
+                        {% endif %}
+                        {% if res.type == 'l' %}
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-9">
+                                <ul class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">
+                                    {% for elt in res.content %}
+                                    <li>{{ elt }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             <div class="text-center">
                 <a href="{{ url_for('home') }}"> Effacer conversation </a>

@@ -9,6 +9,8 @@ import pymysql
 from functions.search import input_cleaner, find_commune
 from flask import Flask, render_template
 
+# TODO : Créer des classes pour les types de messages (paragraphe, liste, liens)
+
 connection = pymysql.connect(host='localhost',
                             user='root',
                             password='root',
@@ -39,20 +41,14 @@ msg_salutation = [
 # On stocke les infos utilisateur dans un dico
 user = {'localisation':''}
 
-flag = True
-flag_search_cp = False
-print("""Bienvenue, \nDites 'au revoir' pour quitter \nD'abord dites moi dans quelle commune vous vivez (64 uniquement):""")
-while (flag == True):
-    text_user = input("> ")
-
-    # Processing entrée utilisateur
-    text_user = input_cleaner(text_user)
+def get_response(text):
+    response = []
+    text_user = input_cleaner(text)
 
     # Pour quitter le chatbot
     if (re.search(good_bye, text_user)):
-        print(random.choice(msg_bot))
-        print(user)
-        flag = False
+        msg = {'type':'p','content':random.choice(msg_bot)}
+        response.append(msg)
 
     # Test localisation
     elif(user['localisation'] == ''):
@@ -64,9 +60,10 @@ while (flag == True):
                     sql = "SELECT `id` FROM `communes` WHERE `nom_slug`=%s"
                     cursor.execute(sql, (user['localisation'],))
                     user['loc_id'] = cursor.fetchone()[0]
-                    print("commune reconnue, le code postal est: ", localisations[user['localisation']])
-                    print(user)
-                    print("Je peux vous aider à trouver des producteurs près de chez vous ? OK?")
+                    msg = {"type": 'p', 'content': "Commune reconnue, le code postal est: " + localisations[user['localisation']]}
+                    response.append(msg)
+                    msg = {'type':'p', 'content': "Je peux vous aider à trouver des producteurs près de chez vous ? OK?"}
+                    response.append(msg)
             except:
                 print("debug: pas trouvé dans la bdd")
                 pass
@@ -83,15 +80,19 @@ while (flag == True):
                 cursor.execute(sql, (user['loc_id'],))
                 result = cursor.fetchall()
                 if (result):
-                    print("Ok voici les producteurs:")
+                    msg = {'type':'p', 'content': "Ok voici les producteurs:"}
+                    response.append(msg)
+                    liste_prod = []
                     for prod in result:
-                        print (prod[0])
+                        liste_prod.append(prod[0])
+                    msg = {'type':'l','content':liste_prod}
+                    response.append(msg)
                 else:
                     print("Il semble qu'il n'y ait pas de producteur connu dans votre commune")
                     print("Voulez-vous que je cherche dans votre canton ?")
                     text_user = input("> ")
                     if (text_user == 'ok'):
-                        flag_search_cp = True
+
                         with connection.cursor() as cursor:
                             sql = "SELECT p.nom, c.nom \
                                     FROM producteurs p \
@@ -109,4 +110,4 @@ while (flag == True):
                                     print (prod[0],"à",prod[1])
                             else:
                                 print("pas de résultat dans le code-postal") # Chercher avec localisations les moins éloignées
-            print(user)
+    return response
