@@ -8,8 +8,9 @@ from textblob_fr import PatternAnalyzer
 import pymysql
 from functions.search import input_cleaner, find_commune
 from flask import Flask, render_template
+from objet.messages import User_msg, Chatbot_msg, Chatbot_list, Chatbot_fiche
 
-# TODO : Créer des classes pour les types de messages (paragraphe, liste, liens)
+
 
 connection = pymysql.connect(host='localhost',
                             user='root',
@@ -42,13 +43,23 @@ msg_salutation = [
 user = {'localisation':''}
 
 def get_response(text):
-    response = []
+    conversation = []
+    conversation.append(User_msg(text))
     text_user = input_cleaner(text)
 
     # Pour quitter le chatbot
     if (re.search(good_bye, text_user)):
-        msg = {'type':'p','content':random.choice(msg_bot)}
-        response.append(msg)
+        conversation.append(Chatbot_msg(random.choice(msg_bot)))
+
+    # debug
+    if (text_user == 'fiche'):
+        content = {
+            'nom': 'Ixuribeherea',
+            'commune':'Ayherre',
+            'produits':['fromage chèvre bio','chevreau','porc basque','jus de pomme bio']
+            }
+        conversation.append(Chatbot_fiche(content))
+        
 
     # Test localisation
     elif(user['localisation'] == ''):
@@ -60,10 +71,9 @@ def get_response(text):
                     sql = "SELECT `id` FROM `communes` WHERE `nom_slug`=%s"
                     cursor.execute(sql, (user['localisation'],))
                     user['loc_id'] = cursor.fetchone()[0]
-                    msg = {"type": 'p', 'content': "Commune reconnue, le code postal est: " + localisations[user['localisation']]}
-                    response.append(msg)
-                    msg = {'type':'p', 'content': "Je peux vous aider à trouver des producteurs près de chez vous ? OK?"}
-                    response.append(msg)
+                    msg = "Commune reconnue, le code postal est: " + localisations[user['localisation']]
+                    conversation.append(Chatbot_msg(msg))
+
             except:
                 print("debug: pas trouvé dans la bdd")
                 pass
@@ -80,17 +90,16 @@ def get_response(text):
                 cursor.execute(sql, (user['loc_id'],))
                 result = cursor.fetchall()
                 if (result):
-                    msg = {'type':'p', 'content': "Ok voici les producteurs:"}
-                    response.append(msg)
+                    conversation.append(Chatbot_msg("Ok voici les producteurs:"))
                     liste_prod = []
                     for prod in result:
                         liste_prod.append(prod[0])
-                    msg = {'type':'l','content':liste_prod}
-                    response.append(msg)
+                    conversation.append(Chatbot_list(liste_prod))
                 else:
-                    print("Il semble qu'il n'y ait pas de producteur connu dans votre commune")
-                    print("Voulez-vous que je cherche dans votre canton ?")
-                    text_user = input("> ")
+                    msg = "Il semble qu'il n'y ait pas de producteur connu dans votre commune"
+                    conversation.append(Chatbot_msg(msg))
+                    msg = "Voulez-vous que je cherche dans votre canton ?"
+                    conversation.append(Chatbot_msg(msg))
                     if (text_user == 'ok'):
 
                         with connection.cursor() as cursor:
@@ -110,4 +119,5 @@ def get_response(text):
                                     print (prod[0],"à",prod[1])
                             else:
                                 print("pas de résultat dans le code-postal") # Chercher avec localisations les moins éloignées
-    return response
+    print(conversation)
+    return conversation

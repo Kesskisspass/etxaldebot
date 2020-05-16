@@ -14,38 +14,66 @@
             <div class="row">
                 <div class="col-3"></div>
                 <div class="col-9 text-right">
-                    <p class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">Bienvenue, <br>Dites 'au revoir' pour quitter. <br>D'abord dites moi dans quelle commune vous vivez (64 uniquement):</p>
+                    <p class ="chat pr-5 pl-5 p-3 rounded-pill bg-light text-left">Bienvenue, <br>Dites 'au revoir' pour quitter. <br>D'abord dites moi dans quelle commune vous vivez (64 uniquement):</p>
                 </div>
             </div>
+            <!-- Si liste conversation  -->
             {% if(conversation) %}
+
+            <!-- On boucle sur chacun des messages -->
                 {% for message in conversation %}
+
+                    <!-- Si envoyé par utilisateur -->
+                    {% if(message.sender == 'u') %}
+                        <div class="row">
+                            <div class="col-9">
+                                <p class ="chat pr-5 pl-5 p-3 rounded-pill bg-primary text-white">{{ message.content }}</p>
+                            </div>
+                            <div class="col-3"></div>
+                        </div>
+                    
+                    <!-- Sinon c'est un message du chatbot -->
+                    {% else %}
+                    
+                    <!-- Si type paragrahe -->
+                    {% if message.type_msg == 'p' %}
                     <div class="row">
-                        <div class="col-9">
-                            <p class="chat pr-3 pl-3 p-1 rounded-pill bg-primary text-white">{{ message[0] }}</p>
+                        <div class="col-3"></div>
+                        <div class="col-9 text-right">
+                            <p class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">{{ message.content }}</p>
                         </div>
                     </div>
-                    {% for res in message[1] %}
-                        {% if res.type == 'p' %}
-                        <div class="row">
-                            <div class="col-3"></div>
-                            <div class="col-9 text-right">
-                                <p class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">{{ res.content }}</p>
-                            </div>
+                    {% endif %}
+                    <!-- Si type liste -->
+                    {% if message.type_msg == 'l' %}
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                            <ul class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">
+                                {% for elt in message.content %}
+                                <li>{{ elt }}</li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                        {% endif %}
-                        {% if res.type == 'l' %}
-                        <div class="row">
-                            <div class="col-3"></div>
-                            <div class="col-9">
-                                <ul class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">
-                                    {% for elt in res.content %}
-                                    <li>{{ elt }}</li>
+                    </div>
+                    {% endif %}
+                    <!-- Si type fiche producteur -->
+                    {% if message.type_msg == 'f' %}
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <div class="col-9 text-right">
+                            <div class ="chat pr-3 pl-3 p-3 rounded bg-light text-left">{{ message.content.nom }}<br> {{ message.content.commune }}
+                                <ul>
+                                    {% for produit in message.content.produits %}
+                                    <li>{{ produit}}</li>
                                     {% endfor %}
                                 </ul>
                             </div>
+                            
                         </div>
-                        {% endif %}
-                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endif %}
                 {% endfor %}
             <div class="text-center">
                 <a href="{{ url_for('home') }}"> Effacer conversation </a>
