@@ -8,9 +8,6 @@ from textblob_fr import PatternAnalyzer
 import pymysql
 from functions.search import input_cleaner, find_commune
 from flask import Flask, render_template
-from objet.messages import User_msg, Chatbot_msg, Chatbot_list, Chatbot_fiche
-
-
 
 connection = pymysql.connect(host='localhost',
                             user='root',
@@ -40,31 +37,22 @@ msg_salutation = [
 ]
 
 # On stocke les infos utilisateur dans un dico
+user = {'localisation':''}
 
-def get_response(text,user):
-    user = user
-    conversation = []
-    conversation.append(User_msg(text))
-    text_user = input_cleaner(text)
+flag = True
+flag_search_cp = False
+print("""Bienvenue, \nDites 'au revoir' pour quitter \nD'abord dites moi dans quelle commune vous vivez (64 uniquement):""")
+while (flag == True):
+    text_user = input("> ")
+
+    # Processing entrée utilisateur
+    text_user = input_cleaner(text_user)
 
     # Pour quitter le chatbot
     if (re.search(good_bye, text_user)):
-        conversation.append(Chatbot_msg(random.choice(msg_bot)))
-
-    # debug
-    if (text_user == 'fiche'):
-        content = {
-            'nom': 'Ixuribeherea',
-            'commune':'Ayherre',
-            'produits':['fromage chèvre bio','chevreau','porc basque','jus de pomme bio']
-            }
-        conversation.append(Chatbot_fiche(content))
-
-    # Supprime localisation user  
-    if (text_user == "supprimer localisation"):
+        print(random.choice(msg_bot))
         print(user)
-        user['localisation']= ''
-        user['loc_id'] = ''
+        flag = False
 
     # Test localisation
     elif(user['localisation'] == ''):
@@ -76,17 +64,17 @@ def get_response(text,user):
                     sql = "SELECT `id` FROM `communes` WHERE `nom_slug`=%s"
                     cursor.execute(sql, (user['localisation'],))
                     user['loc_id'] = cursor.fetchone()[0]
-                    msg = "Commune reconnue, le code postal est: " + localisations[user['localisation']]
-                    conversation.append(Chatbot_msg(msg))
-
+                    print("commune reconnue, le code postal est: ", localisations[user['localisation']])
+                    print(user)
+                    print("Je peux vous aider à trouver des producteurs près de chez vous ? OK?")
             except:
                 print("debug: pas trouvé dans la bdd")
                 pass
         else:
-            msg = "Aie, commune non reconnue"
-            conversation.append(Chatbot_msg(msg))
+            print("Houston, commune non reconnue")
             user['localisation'] = ''
-            conversation.append(Chatbot_msg("""Dites 'au revoir' pour quitter \nSinon dites moi dans quelle commune vous vivez (64 uniquement):"""))
+            print("""Dites 'au revoir' pour quitter \nSinon dites moi dans quelle commune vous vivez (64 uniquement):""")
+            print(user)
     else:
         if (text_user.lower() == 'ok'):
             with connection.cursor() as cursor:
@@ -95,18 +83,15 @@ def get_response(text,user):
                 cursor.execute(sql, (user['loc_id'],))
                 result = cursor.fetchall()
                 if (result):
-                    conversation.append(Chatbot_msg("Ok voici les producteurs:"))
-                    liste_prod = []
+                    print("Ok voici les producteurs:")
                     for prod in result:
-                        liste_prod.append(prod[0])
-                    conversation.append(Chatbot_list(liste_prod))
+                        print (prod[0])
                 else:
-                    msg = "Il semble qu'il n'y ait pas de producteur connu dans votre commune"
-                    conversation.append(Chatbot_msg(msg))
-                    msg = "Voulez-vous que je cherche dans votre canton ?"
-                    conversation.append(Chatbot_msg(msg))
+                    print("Il semble qu'il n'y ait pas de producteur connu dans votre commune")
+                    print("Voulez-vous que je cherche dans votre canton ?")
+                    text_user = input("> ")
                     if (text_user == 'ok'):
-
+                        flag_search_cp = True
                         with connection.cursor() as cursor:
                             sql = "SELECT p.nom, c.nom \
                                     FROM producteurs p \
@@ -124,6 +109,4 @@ def get_response(text,user):
                                     print (prod[0],"à",prod[1])
                             else:
                                 print("pas de résultat dans le code-postal") # Chercher avec localisations les moins éloignées
-    print(conversation)
-    print(user)
-    return conversation
+            print(user)
