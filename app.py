@@ -11,6 +11,9 @@ def home():
     if(conversation):
         for i in range(len(conversation)):
             conversation.pop()
+        user.clear()
+        user = {'localisation':'',
+        'contexte':''}
     return render_template("home.html")
 
 @app.route('/', methods=['POST'])

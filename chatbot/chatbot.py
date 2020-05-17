@@ -39,7 +39,35 @@ msg_salutation = [
 "Egun On"
 ]
 
-# On stocke les infos utilisateur dans un dico
+cat_gen = []
+# Fonction utiles
+def get_cat_produits():
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT `nom` FROM `cat_generale`"
+            cursor.execute(sql)
+            res = cursor.fetchall()
+            for cat in res:
+                cat_gen.append(cat[0])
+            return cat_gen
+    except:
+        pass
+
+def get_produits(nom):
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT categ \
+                    FROM cat_produits \
+                    WHERE categ LIKE %s"
+            cursor.execute(sql,'%' + nom + '%')
+            res = cursor.fetchall()
+            liste_prod = []
+            for prod in res:
+                liste_prod.append(prod[0])
+            return liste_prod
+    except:
+        pass
+
 
 def get_response(text,user):
     user = user
@@ -52,7 +80,7 @@ def get_response(text,user):
         conversation.append(Chatbot_msg(random.choice(msg_bot)))
 
     # debug
-    if (text_user == 'fiche'):
+    elif (text_user == 'fiche'):
         content = {
             'nom': 'Ixuribeherea',
             'commune':'Ayherre',
@@ -60,11 +88,33 @@ def get_response(text,user):
             }
         conversation.append(Chatbot_fiche(content))
 
-    # Supprime localisation user  
-    if (text_user == "supprimer localisation"):
+    # Supprime contenu user 
+    elif (text_user == "supprimer localisation"):
         print(user)
         user['localisation']= ''
         user['loc_id'] = ''
+        user['contexte'] = ''
+
+    # Scenario: cherche produit
+    elif ((re.search(r".*produits?.*" ,text_user)) and user['contexte']== ''):
+        user['contexte']= 'produit-1'
+        conversation.append(Chatbot_msg("Ok voici les catégories de produits:"))
+        conversation.append(Chatbot_list(get_cat_produits()))
+        conversation.append(Chatbot_msg("Veuillez taper le nom d'un produit que vous cherchez:"))
+    
+    elif (user['contexte'] == 'produit-1'):
+        liste_produits = get_produits(text_user)
+        if (len(liste_produits) > 1):
+            conversation.append(Chatbot_msg("Voici les produits que j'ai trouvé"))
+            conversation.append(Chatbot_list(liste_produits))
+        elif (len(liste_produits) == 1):
+            conversation.append(Chatbot_msg("J'ai trouvé un produit:"))
+            conversation.append(Chatbot_list(liste_produits))
+        else:
+            conversation.append(Chatbot_msg("Malheureusement je n'ai rien trouvé de correspondant"))
+    
+    elif (user['contexte'] == 'produit-2'):
+        conversation.append(Chatbot_msg("Ok voici les producteurs qui en vende"))
 
     # Test localisation
     elif(user['localisation'] == ''):
