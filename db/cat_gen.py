@@ -1,6 +1,7 @@
 # Création de la table cat_generale
 
 import pymysql
+from pymysql.err import ProgrammingError
 
 db = pymysql.connect("localhost","root","root","etxaldebot" )
 cursor = db.cursor()
@@ -16,11 +17,11 @@ cursor.execute(sql_table)
 
 liste = ['fromages et produits laitiers','fruits et légumes','viandes','boissons','autres']
 
-sql_rows = "INSERT INTO cat_generale(nom)  VALUES ('%s')"          
+sql_rows = "INSERT INTO `cat_generale`(`nom`)  VALUES (%s)"          
 try:
     cursor.executemany(sql_rows,liste)
     db.commit()
-except:
-    print("Erreur", liste)
+except ProgrammingError as e:
+    print("Erreur",e)
     db.rollback()
 db.close()

@@ -40,9 +40,9 @@ msg_salutation = [
 ]
 
 # On stocke les infos utilisateur dans un dico
-user = {'localisation':''}
 
-def get_response(text):
+def get_response(text,user):
+    user = user
     conversation = []
     conversation.append(User_msg(text))
     text_user = input_cleaner(text)
@@ -59,7 +59,11 @@ def get_response(text):
             'produits':['fromage chèvre bio','chevreau','porc basque','jus de pomme bio']
             }
         conversation.append(Chatbot_fiche(content))
-        
+    # Supprime localisation user  
+    if (text_user == "supprimer localisation"):
+        print(user)
+        user['localisation']= ''
+        user['loc_id'] = ''
 
     # Test localisation
     elif(user['localisation'] == ''):
@@ -78,10 +82,10 @@ def get_response(text):
                 print("debug: pas trouvé dans la bdd")
                 pass
         else:
-            print("Houston, commune non reconnue")
+            msg = "Aie, commune non reconnue"
+            conversation.append(Chatbot_msg(msg))
             user['localisation'] = ''
-            print("""Dites 'au revoir' pour quitter \nSinon dites moi dans quelle commune vous vivez (64 uniquement):""")
-            print(user)
+            conversation.append(Chatbot_msg("""Dites 'au revoir' pour quitter \nSinon dites moi dans quelle commune vous vivez (64 uniquement):"""))
     else:
         if (text_user.lower() == 'ok'):
             with connection.cursor() as cursor:
@@ -120,4 +124,5 @@ def get_response(text):
                             else:
                                 print("pas de résultat dans le code-postal") # Chercher avec localisations les moins éloignées
     print(conversation)
+    print(user)
     return conversation
