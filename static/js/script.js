@@ -1,3 +1,4 @@
+// Création du user pour stocker info localisation, contexte
 
 function submit_entry(){
     // On récupère la question et on la stocke dans un objet
@@ -32,7 +33,7 @@ function submit_entry(){
       response.json().then(function(data) {
 
         console.log(data);
-        
+
         for (elt of data) {
 
           if (elt.content == 'p'){

@@ -5,6 +5,8 @@ from flask import jsonify, make_response
 
 app = Flask(__name__)
 
+user = {'localisation':'','contexte':''}
+
 @app.route('/')
 def home():
     return render_template("home.html")
@@ -13,7 +15,7 @@ def home():
 def create_entry():
     req = request.get_json()
 
-    return get_response(req)
+    return get_response(req,user)
 
 @app.route('/recommandation')
 def recommandation():

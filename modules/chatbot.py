@@ -30,7 +30,7 @@ def create_liste_msg(liste):
 # CHATBOT #
 ###########
 
-def get_response(req):
+def get_response(req,user):
 
     liste_res = []
     req = input_cleaner(req['question'])
