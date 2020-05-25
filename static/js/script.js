@@ -1,4 +1,5 @@
 function submit_entry(){
+  
     // On récupère la question et on la stocke dans un objet
     var question = document.getElementById("question")
     var entry = {
@@ -36,7 +37,7 @@ function submit_entry(){
 
           if (elt.content == 'p'){
             new BotMessage(elt.message)
-            
+
           } else if (elt.content == 'l'){
             new BotList(elt.message)
 

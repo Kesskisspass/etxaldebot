@@ -74,7 +74,7 @@ def get_response(req,user):
             liste_res.append(create_par_msg("Malheureusement je n'ai rien trouvé de correspondant"))
 
     else:
-        liste_res.append(create_par_msg("Désolé mais j'ai pas compris"))
+        liste_res.append(create_par_msg("Désolé mais je n'ai pas compris"))
 
     # debug
     print(liste_res)
