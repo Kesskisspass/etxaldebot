@@ -178,9 +178,9 @@ function BotFiche(content) {
     var space = document.createElement('div');
     space.classList.add("col-3")
     var col = document.createElement('div');
-    col.classList.add("col-9","text-right")
+    col.classList.add("col-9","text-left")
     var div = document.createElement('div')
-    div.classList.add("d-inline-block","pr-3","pl-3","p-3","rounded-pill","bg-light")
+    div.classList.add("d-inline-block","pr-3","pl-3","p-3","rounded","bg-light")
     div.innerHTML = content[0][0] + "<br>" + content[0][1] + "<br>"  + content[0][2]+ "<br>" + content[0][3]
     var ul = document.createElement("ul")
     for (prod of content[1]) {
@@ -193,4 +193,6 @@ function BotFiche(content) {
     row.appendChild(space)
     row.appendChild(col)
     target.append(row)
+
+    window.scrollTo(0,document.body.scrollHeight)
 }

@@ -64,12 +64,10 @@ def get_response(req,user):
     elif (user['contexte'] == 'produit-1'):
         liste_produits = get_produits(req)
         if (len(liste_produits) > 1):
-            user['contexte']= 'produit-2'
             liste_res.append(create_par_msg("Voici les produits que j'ai trouvé"))
             liste_res.append(create_links_produits(liste_produits))
             liste_res.append(create_par_msg("Cliquez sur un produit pour voir les producteurs qui en propose"))
         elif (len(liste_produits) == 1):
-            user['contexte']= 'produit-2'
             liste_res.append(create_par_msg("J'ai trouvé un produit:"))
             liste_res.append(create_links_produits(liste_produits))
         else:
