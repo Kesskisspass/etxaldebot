@@ -71,3 +71,33 @@ def get_producteurs_from_product(id):
             return liste_prod
     except:
         pass
+
+def get_producteur_from_id(id):
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT p.nom, c.nom, p.mail, p.tel \
+                    FROM `producteurs` p \
+                    JOIN `communes`c \
+                    ON c.id = p.fk_commune_id \
+                    WHERE p.id = %s "
+            cursor.execute(sql,int(id))
+            res = cursor.fetchone()
+            try:
+                with connection.cursor() as cursor:
+                    sql = "SELECT cp.categ \
+                            FROM cat_produits cp \
+                            JOIN `producteurs_categories` pc \
+                            ON pc.`fk_cat_produit_id` = cp.id \
+                            JOIN `producteurs` p \
+                            ON p.`id` = pc.`fk_producteur_id` \
+                            WHERE p.id = %s "
+                    cursor.execute(sql,int(id))
+                    res2 = cursor.fetchall()
+                    liste_produits = []
+                    for prod in res2:
+                        liste_produits.append(prod[0])
+                    return (res, liste_produits)
+            except:
+                pass
+    except:
+        pass

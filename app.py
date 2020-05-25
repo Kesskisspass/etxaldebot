@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from modules.chatbot import get_response
-from modules.db import get_produits_from_cat, get_producteurs_from_product
+from modules.db import get_produits_from_cat, get_producteurs_from_product, get_producteur_from_id
 from flask import jsonify, make_response
 
 app = Flask(__name__)
@@ -32,6 +32,13 @@ def send_producteurs():
     prod = request.get_json()
     liste = get_producteurs_from_product(prod['id'])
     res = make_response(jsonify(liste), 200)
+    return res
+
+@app.route('/get_fiche_producteur', methods=['POST'])
+def send_producteur():
+    producteur = request.get_json()
+    fiche = get_producteur_from_id(producteur['id'])
+    res = make_response(jsonify(fiche), 200)
     return res
 
 if __name__ == "__main__":
