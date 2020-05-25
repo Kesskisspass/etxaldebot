@@ -1,92 +1,52 @@
 <!doctype html>
-<html>
-    <head>
-        <title>HomePage</title>
-        
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <link rel="stylesheet" href="static/main.css">
-    </head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <body>
-        <div class="container col-md-6">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/script.js"></script>
+    <script src="static/js/models.js"></script>
 
-            <h1 class="text-center">ETXALDEBOT</h1>
-            <div class="row">
-                <div class="col-3"></div>
-                <div class="col-9 text-right">
-                    <p class ="chat pr-5 pl-5 p-3 rounded-pill bg-light text-left">Bienvenue, <br>Dites 'au revoir' pour quitter. <br>D'abord dites moi dans quelle commune vous vivez (64 uniquement):</p>
-                </div>
+    <title>EtxaldeBot</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">EtxaldeBot</span>
+        <ul class="nav text-left">
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Chatbot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('recommandation') }}">Recommandation</a>
+          </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+      <h1 class="text-center display-1">EtxaldeBot</h1>
+      <hr>
+      <div class="row">
+        <div class="col">
+
+          <!-- Bloc contenant tous les échanges user/bot -->
+          <div id="conversation">       
+          </div>
+
+          <!-- Formulaire envoi message -->
+          <div class="text-center bg-light fixed-bottom p-3">
+            <div class="form-group">
+              <label>Question</label>
+              <input type="text" class="form-control" id="question" placeholder="Votre question">
+              <button class="btn btn-primary mt-3" onclick="submit_entry();">Demander</button>
             </div>
-            <!-- Si liste conversation  -->
-            {% if(conversation) %}
+          </div>
 
-            <!-- On boucle sur chacun des messages -->
-                {% for message in conversation %}
-
-                    <!-- Si envoyé par utilisateur -->
-                    {% if(message.sender == 'u') %}
-                        <div class="row">
-                            <div class="col-9">
-                                <p class ="chat pr-5 pl-5 p-3 rounded-pill bg-primary text-white">{{ message.content }}</p>
-                            </div>
-                            <div class="col-3"></div>
-                        </div>
-                    
-                    <!-- Sinon c'est un message du chatbot -->
-                    {% else %}
-                    
-                    <!-- Si type paragrahe -->
-                    {% if message.type_msg == 'p' %}
-                    <div class="row">
-                        <div class="col-3"></div>
-                        <div class="col-9 text-right">
-                            <p class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">{{ message.content }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <!-- Si type liste -->
-                    {% if message.type_msg == 'l' %}
-                    <div class="row">
-                        <div class="col-3"></div>
-                        <div class="col-9">
-                            <ul class ="chat pr-3 pl-3 p-1 rounded-pill bg-light">
-                                {% for elt in message.content %}
-                                <li>{{ elt }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <!-- Si type fiche producteur -->
-                    {% if message.type_msg == 'f' %}
-                    <div class="row">
-                        <div class="col-3"></div>
-                        <div class="col-9 text-right">
-                            <div class ="chat pr-3 pl-3 p-3 rounded bg-light text-left">{{ message.content.nom }}<br> {{ message.content.commune }}
-                                <ul>
-                                    {% for produit in message.content.produits %}
-                                    <li>{{ produit}}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endif %}
-                {% endfor %}
-            <div class="text-center">
-                <a href="{{ url_for('home') }}"> Effacer conversation </a>
-            </div>
-            {% endif %}
-            <div class="text-center bg-info fixed-bottom p-3">
-                <p>Veuillez poser votre question:</p>
-                <form action="." method="POST">
-                    <input type="text" name="question" placeholder="Votre question">
-                    <button type="submit" class="btn btn-primary">OK</button>
-                </form>
-            </div>
         </div>
-        <div id="end"></div>
-    </body>
+      </div>
+    </div>
+
+    
+  </body>
 </html>

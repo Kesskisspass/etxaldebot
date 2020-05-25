@@ -1,10 +1,5 @@
-csv
-re
-string
-textblob
-textblob_fr
-pymysql
-math
-requests
-bs4
 flask
+chatterbot
+re
+random
+pymysql

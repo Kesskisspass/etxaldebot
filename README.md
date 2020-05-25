@@ -12,7 +12,7 @@ Enfin, après analyse des produits recherchés par l'utilisateur, le chatbot doi
 - Pour effectuer les recommandations aux utilisateurs: utilisation d'un modèle de machine learning
 
 ## Schéma Fonctionnement Général:
-![schema](images/schema_chatbot.png)
+![schema](static/img/schema_chatbot.png)
 
 ## Schéma Base de données
-![bdd](images/bdd_etxaldebot.png)
+![bdd](static/img/bdd_etxaldebot.png)

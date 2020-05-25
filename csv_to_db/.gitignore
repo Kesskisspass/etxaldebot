@@ -1,0 +1,17 @@
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.history
+.~lock*
+
+settings.json
+
+test.py
+
+__pycache__
+
+.ipynb_checkpoints
