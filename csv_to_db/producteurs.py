@@ -39,7 +39,7 @@ sql_table = """CREATE TABLE producteurs (
 cursor.execute(sql_table)
 
 # Import des lignes en parcourant le csv
-with open('scrap/producteurs.csv', mode='r') as csv_file:
+with open('static/csv/producteurs.csv', mode='r') as csv_file:
     fieldnames = ['nom','maison','mail','tel','code_postal','commune']
     csv_reader = csv.DictReader(csv_file, fieldnames=fieldnames)
     next(csv_reader)

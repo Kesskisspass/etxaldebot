@@ -2,7 +2,7 @@ from math import acos, cos, sin, radians
 import csv
 
 def find_commune(name):
-    with open('localisation/communes_64.csv', mode='r') as csv_file:
+    with open('static/csv/communes_64.csv', mode='r') as csv_file:
         fieldnames = ['nom_commune','slug','codepostal','latitude','longitude']
         csv_reader = csv.DictReader(csv_file, fieldnames=fieldnames)
         flag = False

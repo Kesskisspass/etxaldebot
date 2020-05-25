@@ -29,7 +29,7 @@ categories_produits = dict()
 
 # Création d'un csv qui regroupe toutes les infos producteur
 
-with open('scrap/producteurs.csv', 'w', newline='') as f:
+with open('static/csv/producteurs.csv', 'w', newline='') as f:
     fieldnames = ['nom','maison','mail','tel','code_postal','commune','categ_prod','produits','lieux','horaires']
     writer = csv.DictWriter(f,fieldnames=fieldnames)
     writer.writeheader()
@@ -138,7 +138,7 @@ with open('scrap/producteurs.csv', 'w', newline='') as f:
         writer.writerow(dico)
 
 # Création csv des catégories de produits (et nombre de producteurs qui le propose)
-f = open('scrap/categ_prod.csv', 'w', newline='')
+f = open('static/csv/categ_prod.csv', 'w', newline='')
 with f:
     writer = csv.writer(f)
     writer.writerow(['categorie','bio','nombre'])

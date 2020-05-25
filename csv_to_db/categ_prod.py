@@ -21,7 +21,7 @@ sql_table = """CREATE TABLE cat_produits (
 cursor.execute(sql_table)
 
 # Import des lignes en parcourant le csv
-with open('scrap/categ_prod.csv', mode='r') as csv_file:
+with open('static/csv/categ_prod.csv', mode='r') as csv_file:
     fieldnames = ['categ','bio']
     csv_reader = csv.DictReader(csv_file, fieldnames=fieldnames)
     flag = False
