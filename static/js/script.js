@@ -1,5 +1,3 @@
-// Création du user pour stocker info localisation, contexte
-
 function submit_entry(){
     // On récupère la question et on la stocke dans un objet
     var question = document.getElementById("question")
@@ -41,7 +39,11 @@ function submit_entry(){
             
           } else if (elt.content == 'l'){
             new BotList(elt.message)
+
+          } else if (elt.content == 'links_produits'){
+            new BotLinksProduits(elt.message)
           }
+          
         }
 
         // Après affichage quelques traitements pour l'interface utilisateur

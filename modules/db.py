@@ -23,14 +23,14 @@ def get_cat_produits():
 def get_produits(nom):
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT categ \
+            sql = "SELECT categ , id\
                     FROM cat_produits \
                     WHERE categ LIKE %s"
             cursor.execute(sql,'%' + nom + '%')
             res = cursor.fetchall()
             liste_prod = []
             for prod in res:
-                liste_prod.append(prod[0])
+                liste_prod.append(prod)
             return liste_prod
     except:
         pass
@@ -41,6 +41,27 @@ def get_produits_from_cat(id):
             sql = "SELECT `categ`,`id`\
                     FROM `cat_produits` \
                     WHERE `fk_cat_gen_id` = %s"
+            cursor.execute(sql,int(id))
+            res = cursor.fetchall()
+            liste_prod = []
+            for prod in res:
+                liste_prod.append(prod)
+            return liste_prod
+    except:
+        pass
+
+def get_producteurs_from_product(id):
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT p.nom, c.nom, p.id \
+                    FROM `producteurs` p \
+                    JOIN `producteurs_categories` pc \
+                    ON pc.`fk_producteur_id` = p.id \
+                    JOIN `cat_produits` cp \
+                    ON pc.`fk_cat_produit_id` = cp.id \
+                    JOIN `communes`c \
+                    ON c.id = p.fk_commune_id \
+                    WHERE cp.id = %s "
             cursor.execute(sql,int(id))
             res = cursor.fetchall()
             liste_prod = []

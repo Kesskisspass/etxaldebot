@@ -29,6 +29,9 @@ with open('static/csv/categ_prod.csv', mode='r') as csv_file:
         cat = row['categ'].strip()
         cat = cat.lower()
         cat = cat.replace('\'',' ')
+        cat = cat.replace('é'|'è'|'ê','e')
+        cat = cat.replace('ï','i')
+        cat = cat.replace("fromages","fromage")
         cat_gen = 5
         try:
             fromage = re.match(r'.*fromages?.*|.*lait.*',cat)

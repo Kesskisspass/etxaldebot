@@ -26,9 +26,13 @@ def create_liste_msg(liste):
     dic = {"content":"l","message":liste}
     return dic
 
-###########
-# CHATBOT #
-###########
+def create_links_produits(liste):
+    dic = {"content":"links_produits","message":liste}
+    return dic
+
+#############
+## CHATBOT ##
+#############
 
 def get_response(req,user):
 
@@ -38,10 +42,7 @@ def get_response(req,user):
     if (re.search(input_bye, req)):
         liste_res.append(create_par_msg(random.choice(bot_bye)))
 
-    elif (req == 'categories'):
-        cat = get_cat_produits()
-        liste_res.append(create_liste_msg(cat))
-
+    # Test
     elif (req == 'ca va?'):
         liste_res.append(create_par_msg("Oui et toi?"))
         liste_res.append(create_par_msg("Merci de demander"))
@@ -49,8 +50,33 @@ def get_response(req,user):
     elif (req == 'films preferes?'):
         films = ['star wars','spiderman','là haut']
         liste_res.append(create_liste_msg(films))
+
+    elif (req == 'autre recherche'):
+        user['contexte'] = ''
+
+    # Scenario: cherche produit
+    elif ((re.search(r".*produits?.*" ,req)) and user['contexte']== ''):
+        user['contexte']= 'produit-1'
+        liste_res.append(create_par_msg("Ok voici les catégories de produits:"))
+        liste_res.append(create_liste_msg(get_cat_produits()))
+        liste_res.append(create_par_msg("Veuillez taper le nom d'un produit que vous cherchez:"))
+
+    elif (user['contexte'] == 'produit-1'):
+        liste_produits = get_produits(req)
+        if (len(liste_produits) > 1):
+            user['contexte']= 'produit-2'
+            liste_res.append(create_par_msg("Voici les produits que j'ai trouvé"))
+            liste_res.append(create_links_produits(liste_produits))
+            liste_res.append(create_par_msg("Cliquez sur un produit pour voir les producteurs qui en propose"))
+        elif (len(liste_produits) == 1):
+            user['contexte']= 'produit-2'
+            liste_res.append(create_par_msg("J'ai trouvé un produit:"))
+            liste_res.append(create_links_produits(liste_produits))
+        else:
+            liste_res.append(create_par_msg("Malheureusement je n'ai rien trouvé de correspondant"))
+
     else:
-        liste_res.append(create_par_msg("J'ai pas compris"))
+        liste_res.append(create_par_msg("Désolé mais j'ai pas compris"))
 
     # debug
     print(liste_res)
