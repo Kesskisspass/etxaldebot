@@ -6,3 +6,4 @@ pymysql
 csv
 pickle
 sklearn
+bs4

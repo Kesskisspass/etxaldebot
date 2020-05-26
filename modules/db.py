@@ -34,13 +34,13 @@ def get_produits(nom):
             return liste_prod
     except:
         pass
-
+# A modifier avec la nouvelle table xixtroak
 def get_produits_from_cat(id):
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT `categ`,`id`\
-                    FROM `cat_produits` \
-                    WHERE `fk_cat_gen_id` = %s"
+            sql = "SELECT `article` \
+                    FROM `reco_produits` \
+                    WHERE `cat_id` = %s"
             cursor.execute(sql,int(id))
             res = cursor.fetchall()
             liste_prod = []
