@@ -22,14 +22,11 @@ function BotMessage(content) {
     col.classList.add("col-9","text-right")
     var par = document.createElement('p')
     par.classList.add("d-inline-block","pr-3","pl-3","p-3","rounded-pill","bg-light")
-    par.innerHTML = "..."
+    par.innerHTML = content
     col.appendChild(par)
     row.appendChild(space)
     row.appendChild(col)
     target.append(row)
-    setTimeout(()=>{
-        par.innerHTML = content
-    },1000)
 }
 
 function BotList(content) {
@@ -40,24 +37,18 @@ function BotList(content) {
     space.classList.add("col-3")
     var col = document.createElement('div');
     col.classList.add("col-9","text-right")
-    col.innerHTML = "..."
+    var ul = document.createElement('ul');
+    ul.classList.add("d-inline-block","p-4","rounded","bg-light");
+    for (msg of content) {
+        var element = document.createElement('li');
+        element.innerHTML = msg
+        ul.appendChild(element)
+    };
+    col.appendChild(ul)
     row.appendChild(space)
     row.appendChild(col)
     target.append(row)
 
-    setTimeout(()=>{
-        col.innerHTML = ""
-        var ul = document.createElement('ul')
-        ul.classList.add("d-inline-block","p-4","rounded","bg-light");
-        for (msg of content) {
-            var element = document.createElement('li');
-            element.innerHTML = msg
-            ul.appendChild(element)
-            
-        };
-        col.appendChild(ul)
-        window.scrollTo(0,document.body.scrollHeight)
-    },1000)
     window.scrollTo(0,document.body.scrollHeight)
 }
 
@@ -69,15 +60,8 @@ function BotLinksProduits(content) {
     space.classList.add("col-3")
     var col = document.createElement('div');
     col.classList.add("col-9","text-right")
-    col.innerHTML = "..."
-    var ul = document.createElement('ul')
-    row.appendChild(space)
-    row.appendChild(col)
-    target.append(row)
-
-    setTimeout(()=>{
-        col.innerHTML = ""
-        ul.classList.add("d-inline-block","p-4","rounded","bg-light");
+    var ul = document.createElement('ul');
+    ul.classList.add("d-inline-block","p-4","rounded","bg-light");
         for (tuple of content) {
             var element = document.createElement('li');
             var a = document.createElement('a');
@@ -89,9 +73,12 @@ function BotLinksProduits(content) {
             element.appendChild(a)
             ul.appendChild(element)
         };
-        col.appendChild(ul)
-        window.scrollTo(0,document.body.scrollHeight)
-    },1000)
+    col.appendChild(ul)
+    var ul = document.createElement('ul')
+    row.appendChild(space)
+    row.appendChild(col)
+    target.append(row)
+
     window.scrollTo(0,document.body.scrollHeight)
 }
 
@@ -103,13 +90,7 @@ function BotLinksProducteurs(content) {
     space.classList.add("col-3")
     var col = document.createElement('div');
     col.classList.add("col-9","text-right")
-    col.innerHTML="..."
-    row.appendChild(space)
-    row.appendChild(col)
-    target.append(row)
-    setTimeout(()=>{
-        col.innerHTML=""
-        var ul = document.createElement('ul')
+    var ul = document.createElement('ul')
         ul.classList.add("d-inline-block","p-4","rounded","bg-light");
         for (tuple of content) {
             var element = document.createElement('li');
@@ -125,16 +106,17 @@ function BotLinksProducteurs(content) {
             ul.appendChild(element)
             window.scrollTo(0,document.body.scrollHeight)
         };
-        col.appendChild(ul)
-    },1000)
+    col.appendChild(ul)
+    row.appendChild(space)
+    row.appendChild(col)
+    target.append(row)
+    
     window.scrollTo(0,document.body.scrollHeight)
 }
 
 function get_producteur(link) {
     prod_id = link.getAttribute('product_id')
-    console.log("ID du produit cliqué: ",prod_id)
-    // TODO
-    // Si clic affiche la fiche producteur
+    console.log("ID du produit cliqué: ",prod_id);
     fetch('http://127.0.0.1:5000/get_producteurs', {
       method: "POST",
       credentials: "include",
@@ -183,11 +165,7 @@ function get_fiche_producteur(link) {
         }
 
         response.json().then(function(data) {
-  
-
-        console.log("La fiche est : ", data)
-        new BotFiche(data)
-
+            new BotFiche(data);
         })
       })
       return false;
@@ -203,14 +181,8 @@ function BotFiche(content) {
     col.classList.add("col-9","text-left")
     var div = document.createElement('div')
     div.classList.add("d-inline-block","pr-3","pl-3","p-3","rounded","bg-light")
-    div.innerHTML = "..."
-    col.appendChild(div)
-    row.appendChild(space)
-    row.appendChild(col)
-    target.append(row)
-    
-    setTimeout(()=>{
-        div.innerHTML = content[0][0] + "<br>" + content[0][1] + "<br>"  + content[0][2]+ "<br>" + content[0][3]
+
+    div.innerHTML = content[0][0] + "<br>" + content[0][1] + "<br>"  + content[0][2]+ "<br>" + content[0][3]
         var ul = document.createElement("ul")
         for (prod of content[1]) {
             var li = document.createElement("li")
@@ -218,7 +190,11 @@ function BotFiche(content) {
             ul.appendChild(li)
             div.appendChild(ul)
             window.scrollTo(0,document.body.scrollHeight)
-        }
-    },1000)
+        };
+    col.appendChild(div)
+    row.appendChild(space)
+    row.appendChild(col)
+    target.append(row)
+    
     window.scrollTo(0,document.body.scrollHeight)
 }
