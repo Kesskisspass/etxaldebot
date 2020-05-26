@@ -3,3 +3,6 @@ chatterbot
 re
 random
 pymysql
+csv
+pickle
+sklearn
