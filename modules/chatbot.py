@@ -2,6 +2,7 @@ from flask import jsonify, make_response
 import re
 import random
 from modules.db import get_cat_produits, get_produits
+from modules.distance import find_commune
 
 input_bye = r"(au revoir)|(a bientot)|quit|ciao|(hasta la vista)|(a ?\+)"
 bot_bye = ["Au revoir !", "À bientôt", "À très vite","Ciao ciao"]
@@ -42,17 +43,10 @@ def get_response(req,user):
     if (re.search(input_bye, req)):
         liste_res.append(create_par_msg(random.choice(bot_bye)))
 
-    # Test
-    elif (req == 'ca va?'):
-        liste_res.append(create_par_msg("Oui et toi?"))
-        liste_res.append(create_par_msg("Merci de demander"))
-
-    elif (req == 'films preferes?'):
-        films = ['star wars','spiderman','là haut']
-        liste_res.append(create_liste_msg(films))
 
     elif (req == 'autre recherche'):
         user['contexte'] = ''
+        liste_res.append(create_par_msg("Ok que cherchez vous ? des produits ou des producteurs?:"))
 
     # Scenario: cherche produit
     elif ((re.search(r".*produits?.*" ,req)) and user['contexte']== ''):
@@ -73,9 +67,26 @@ def get_response(req,user):
         else:
             liste_res.append(create_par_msg("Malheureusement je n'ai rien trouvé de correspondant"))
 
+    # Scénario: recherche producteur
+    elif ((re.search(r".*producteurs?.*" ,req)) and user['contexte']== ''):
+        user['contexte']= 'producteur-1'
+        liste_res.append(create_par_msg("Ok, pour trouver les producteurs les plus proche de chez vous, j'ai besoin de connaitre le nom de votre commune (uniquement 64):"))
+    
+    elif(user['contexte'] == 'producteur-1'):
+        print(find_commune(req))
+        if(find_commune(req)["found"]==1):
+            user['localisation'] = req
+            user['contexte'] = 'producteur-2'
+            liste_res.append(create_par_msg(find_commune(req)["msg"]))
+            # TODO: Renvoyer un liste des producteurs les plus proche
+        else:
+            user['contexte'] = 'localisation-failed'
+            liste_res.append(create_par_msg(find_commune(req)["msg"]))
+            # TODO: Boucler sur la demande de localisation
+
     else:
         liste_res.append(create_par_msg("Désolé mais je n'ai pas compris"))
-
+    
     # debug
     print(liste_res)
     

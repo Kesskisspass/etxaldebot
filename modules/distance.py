@@ -13,16 +13,18 @@ def find_commune(name):
         for row in csv_reader:
             if (row['slug'] == name):
                 flag = True
-                return(float(row['latitude']),float(row['longitude']))
+                res = {"found":1,"msg":f"Ok je connais bien {name.capitalize()}"}
+                return(res)
         if (flag == False):
-            print("Commune non trouvée")
+            res = {"found":0,"msg":f"Aïe, je ne trouve pas {name.capitalize()}"}
+            return(res)
 
 # Test calcul distance avec deux communes
-c1 = input("Veuillez entrer le nom de la première commune:\n")
-p1 = find_commune(c1)
-c2 = input("Veuillez entrer le nom de la seconde commune:\n")
-p2 = find_commune(c2)
+# c1 = input("Veuillez entrer le nom de la première commune:\n")
+# p1 = find_commune(c1)
+# c2 = input("Veuillez entrer le nom de la seconde commune:\n")
+# p2 = find_commune(c2)
 
 # Calcul distance
-distance = acos(sin(radians(p1[0]))*sin(radians(p2[0]))+cos(radians(p1[0]))*cos(radians(p2[0]))*cos(radians(p1[1]-p2[1])))*6371
-print(f"La distance entre les deux communes est de : {round(distance,2)}km")
+# distance = acos(sin(radians(p1[0]))*sin(radians(p2[0]))+cos(radians(p1[0]))*cos(radians(p2[0]))*cos(radians(p1[1]-p2[1])))*6371
+# print(f"La distance entre les deux communes est de : {round(distance,2)}km")
