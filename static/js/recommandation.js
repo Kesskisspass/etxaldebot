@@ -1,15 +1,15 @@
-selected_prod_id = []
+selected_products = []
 
 function choose_prod(){
   var sel = document.getElementById("select_prod");
   var prod_txt = sel.options[sel.selectedIndex].text;
-  var prod_id = sel.value;
+  // var prod_id = sel.value;
   li = document.createElement("li")
   li.innerHTML = prod_txt
   target = document.getElementById("selected_prod")
   target.appendChild(li)
   // On ajoute également l'id du produit dans un array pour faire notre requete recomamndation
-  selected_prod_id.push(prod_id)
+  selected_products.push(prod_txt)
 }
 
 function delete_liste_prod() {
@@ -18,7 +18,11 @@ function delete_liste_prod() {
   while (target.firstChild) {
     target.removeChild(target.lastChild);
   }
-  selected_prod_id = []
+  reco = document.getElementById("display_recommandation")
+  while (reco.firstChild) {
+    reco.removeChild(reco.lastChild);
+  }
+  selected_products = []
 }
 
 // Fonction qui génère le second select à partir de la catégorie choisie
@@ -75,4 +79,65 @@ function get_cat_id() {
           })
         })
     
+}
+
+
+recommended_products = []
+
+function get_recommandation() {
+  console.log("Dans le panier:",selected_products)
+
+  fetch('http://127.0.0.1:5000/send_recommandation', {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(selected_products),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    }).then(function (response) {
+
+      if (response.status !== 200) {
+          console.log("Erreur ! Response status: " + response.status);
+          return ;
+        }
+        response.json().then(function(data) {
+
+          console.log("Data reçues :",data);
+
+          recommended_products = data;
+
+          var target = document.getElementById("display_recommandation")
+          while (target.firstChild) {
+            target.removeChild(target.lastChild);
+          }
+          var alert = document.createElement("div")
+          alert.id = "recommandation"
+          alert.classList.add("alert","alert-success")
+          alert.setAttribute("value",0)
+          alert.innerHTML = recommended_products[0]
+          target.appendChild(alert)
+          var icon = document.createElement("i")
+          icon.classList.add("fas","fa-recycle","fa-2x")
+          icon.style.cursor = "pointer"
+          icon.onclick = change_recommandation
+          target.appendChild(icon)
+
+        })
+      })
+  
+}
+
+function change_recommandation(){
+  var reco= document.getElementById("recommandation")
+  var reco_value = parseInt(reco.getAttribute("value"))
+  if(reco_value < (recommended_products.length - 1)) {
+
+    reco_value = reco_value + 1
+    reco.setAttribute("value",reco_value)
+    reco.innerHTML = recommended_products[reco_value]
+  }
+
+  console.log(recommended_products[reco_value])
+  
 }

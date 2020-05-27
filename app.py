@@ -24,7 +24,9 @@ def recommandation():
 @app.route('/send_recommandation', methods=['POST'])
 def create_reco():
     req = request.get_json()
-    return get_reco(req)
+    liste = get_reco(req)
+    res = make_response(jsonify(liste), 200)
+    return res
 
 @app.route('/get_product', methods=['POST'])
 def fill_product():
