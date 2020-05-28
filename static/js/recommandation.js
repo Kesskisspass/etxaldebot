@@ -8,8 +8,15 @@ function choose_prod(){
   li.innerHTML = prod_txt
   target = document.getElementById("selected_prod")
   target.appendChild(li)
+
+  var delete_list_btn = document.getElementById("delete_list_btn")
+  delete_list_btn.disabled = false;
   // On ajoute également l'id du produit dans un array pour faire notre requete recomamndation
   selected_products.push(prod_txt)
+  if(selected_products.length>=3) {
+    var reco_btn = document.getElementById("recommandation_btn")
+    reco_btn.disabled = false
+  }
 }
 
 function delete_liste_prod() {
@@ -23,6 +30,10 @@ function delete_liste_prod() {
     reco.removeChild(reco.lastChild);
   }
   selected_products = []
+  var delete_list_btn = document.getElementById("delete_list_btn")
+  delete_list_btn.disabled = true;
+  var reco_btn = document.getElementById("recommandation_btn")
+  reco_btn.disabled = true
 }
 
 // Fonction qui génère le second select à partir de la catégorie choisie

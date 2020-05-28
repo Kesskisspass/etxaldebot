@@ -29,7 +29,7 @@
         <div class="jumbotron">
             <h3 class="text-center mb-3">Selectionnez au minimum 3 produits pour recevoir une recommandation:</h3>
             <hr class="my-4">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-6">
                     <form>
                         <div class="form-group text-center">
@@ -61,15 +61,15 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-6">
-                    <ul id="selected_prod">
+                <div class="col-sm-6 col-md-4 mx-auto bg-white rounded mt-3">
+                    <ul id="selected_prod" class="mt-3">
 
                     </ul>
                 </div>
             </div>
             <div class="mx-auto text-center mb-3">
-                <button type="button" onclick="get_recommandation()" class="btn btn-success mr-3">Recommandation</button>
-                <button onclick="delete_liste_prod()" type="button" class="btn btn-danger ml-3">Effacer la liste</button>
+                <button type="button" onclick="get_recommandation()" id="recommandation_btn" disabled class="btn btn-success mr-3">Recommandation</button>
+                <button onclick="delete_liste_prod()" type="button" id="delete_list_btn" disabled class="btn btn-danger ml-3">Effacer la liste</button>
             </div>
             <div id="display_recommandation" class="m-3 text-center col-lg-6 mx-auto">
 
