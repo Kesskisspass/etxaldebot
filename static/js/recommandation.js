@@ -11,7 +11,7 @@ function choose_prod(){
 
   var delete_list_btn = document.getElementById("delete_list_btn")
   delete_list_btn.disabled = false;
-  // On ajoute également l'id du produit dans un array pour faire notre requete recomamndation
+  // On ajoute également l'id du produit dans un array pour faire notre requete recommandation
   selected_products.push(prod_txt)
   if(selected_products.length>=3) {
     var reco_btn = document.getElementById("recommandation_btn")
@@ -126,7 +126,10 @@ function get_recommandation() {
           alert.id = "recommandation"
           alert.classList.add("alert","alert-success")
           alert.setAttribute("value",0)
-          alert.innerHTML = recommended_products[0]
+          alert.innerText = recommended_products[0]
+          var icon = document.createElement("i")
+          icon.classList.add("fas","fa-cart-plus","fa-2x","pl-5")
+          alert.appendChild(icon)
           target.appendChild(alert)
           var icon = document.createElement("i")
           icon.classList.add("fas","fa-recycle","fa-2x")
@@ -146,7 +149,7 @@ function change_recommandation(){
 
     reco_value = reco_value + 1
     reco.setAttribute("value",reco_value)
-    reco.innerHTML = recommended_products[reco_value]
+    reco.innerText = recommended_products[reco_value]
   }
 
   console.log(recommended_products[reco_value])
