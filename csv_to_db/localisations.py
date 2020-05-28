@@ -26,7 +26,7 @@ with open('static/cav/communes_64.csv', mode='r') as csv_file:
     for row in csv_reader:
 
         sql_rows = "INSERT INTO communes(nom, \
-        nom_slug, code_postal, longitude, latitude) \
+        nom_slug, code_postal, latitude, longitude) \
         VALUES ('%s', '%s', '%s', '%s', '%s' )" % \
         (row['nom_commune'], row['slug'], row['codepostal'], row['latitude'],row['longitude'])
         

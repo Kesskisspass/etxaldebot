@@ -1,8 +1,8 @@
 from flask import jsonify, make_response
 import re
 import random
-from modules.db import get_cat_produits, get_produits
-from modules.distance import find_commune
+from modules.db import get_cat_produits, get_produits, get_all_producteurs_with_coord, get_info_prod
+from modules.distance import find_commune,calc_distance
 
 input_bye = r"(au revoir)|(a bientot)|quit|ciao|(hasta la vista)|(a ?\+)"
 bot_bye = ["Au revoir !", "À bientôt", "À très vite","Ciao ciao"]
@@ -29,6 +29,10 @@ def create_liste_msg(liste):
 
 def create_links_produits(liste):
     dic = {"content":"links_produits","message":liste}
+    return dic
+
+def create_links_producteurs(liste):
+    dic = {"content":"links_producteurs","message":liste}
     return dic
 
 #############
@@ -73,12 +77,32 @@ def get_response(req,user):
         liste_res.append(create_par_msg("Ok, pour trouver les producteurs les plus proche de chez vous, j'ai besoin de connaitre le nom de votre commune (uniquement 64):"))
     
     elif(user['contexte'] == 'producteur-1'):
-        print(find_commune(req))
-        if(find_commune(req)["found"]==1):
-            user['localisation'] = req
+        response = find_commune(req)
+        if(response["found"]==1):
+            user['localisation'] = response['localisation']
+            user['longitude'] = response['longitude']
+            user['latitude'] = response['latitude']
             user['contexte'] = 'producteur-2'
             liste_res.append(create_par_msg(find_commune(req)["msg"]))
             # TODO: Renvoyer un liste des producteurs les plus proche
+            # faire une fonction qui prend les coordonnées de user
+            # et le tableau des prod reçus
+            # puis qui boucle pour calculer la distance entre les deux
+            # mettre le resultat dans un tuple (id_prod,distance)
+            # ensuite on classe les tuples en fonction de la distance
+            # et on a notre liste d'id de prod les plus proche
+
+
+            prods = get_all_producteurs_with_coord()
+            liste_dist = []
+            for prod in prods:
+                liste_dist.append(calc_distance(user,prod))
+            liste_dist.sort(key=lambda tup: tup[1])
+            liste_prod = []
+            for prod in liste_dist[:5]:
+                liste_prod.append(get_info_prod(prod[0]))
+            liste_res.append(create_links_producteurs(liste_prod))
+
         else:
             user['contexte'] = 'localisation-failed'
             liste_res.append(create_par_msg(find_commune(req)["msg"]))

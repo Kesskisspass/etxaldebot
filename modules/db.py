@@ -101,3 +101,33 @@ def get_producteur_from_id(id):
                 pass
     except:
         pass
+
+def get_all_producteurs_with_coord():
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT p.id, p.nom, c.nom, c.longitude, c.latitude \
+                    FROM `communes` c \
+                    JOIN `producteurs` p \
+                    ON p.`fk_commune_id` = c.id  "
+            cursor.execute(sql)
+            res = cursor.fetchall()
+            liste_prod = []
+            for prod in res:
+                liste_prod.append(prod)
+            return liste_prod
+    except:
+        pass
+
+def get_info_prod(id):
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT p.nom, c.nom, p.id \
+                    FROM `producteurs` p \
+                    JOIN `communes`c \
+                    ON c.id = p.fk_commune_id \
+                    WHERE p.id = %s "
+            cursor.execute(sql,int(id))
+            res = cursor.fetchone()
+            return res
+    except:
+        pass

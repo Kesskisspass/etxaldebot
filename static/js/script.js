@@ -43,8 +43,10 @@ function submit_entry(){
 
           } else if (elt.content == 'links_produits'){
             new BotLinksProduits(elt.message)
+             
+          } else if (elt.content == 'links_producteurs'){
+          new BotLinksProducteurs(elt.message)
           }
-          
         }
 
         // Après affichage quelques traitements pour l'interface utilisateur
