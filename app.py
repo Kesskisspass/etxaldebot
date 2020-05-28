@@ -15,6 +15,7 @@ def home():
 @app.route('/send_message', methods=['POST'])
 def create_entry():
     req = request.get_json()
+    print(user)
     return get_response(req,user)
 
 @app.route('/recommandation')

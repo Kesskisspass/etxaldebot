@@ -84,14 +84,6 @@ def get_response(req,user):
             user['latitude'] = response['latitude']
             user['contexte'] = 'producteur-2'
             liste_res.append(create_par_msg(find_commune(req)["msg"]))
-            # TODO: Renvoyer un liste des producteurs les plus proche
-            # faire une fonction qui prend les coordonnées de user
-            # et le tableau des prod reçus
-            # puis qui boucle pour calculer la distance entre les deux
-            # mettre le resultat dans un tuple (id_prod,distance)
-            # ensuite on classe les tuples en fonction de la distance
-            # et on a notre liste d'id de prod les plus proche
-
 
             prods = get_all_producteurs_with_coord()
             liste_dist = []
@@ -104,9 +96,7 @@ def get_response(req,user):
             liste_res.append(create_links_producteurs(liste_prod))
 
         else:
-            user['contexte'] = 'localisation-failed'
             liste_res.append(create_par_msg(find_commune(req)["msg"]))
-            # TODO: Boucler sur la demande de localisation
 
     else:
         liste_res.append(create_par_msg("Désolé mais je n'ai pas compris"))
