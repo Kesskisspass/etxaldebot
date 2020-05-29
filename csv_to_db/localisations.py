@@ -19,7 +19,7 @@ sql_table = """CREATE TABLE communes (
 cursor.execute(sql_table)
 
 # Import des lignes en parcourant le csv
-with open('static/cav/communes_64.csv', mode='r') as csv_file:
+with open('static/csv/communes_64.csv', mode='r') as csv_file:
     fieldnames = ['nom_commune','slug','codepostal','latitude','longitude']
     csv_reader = csv.DictReader(csv_file, fieldnames=fieldnames)
     flag = False
