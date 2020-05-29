@@ -48,7 +48,7 @@ def get_response(req,user):
         liste_res.append(create_par_msg(random.choice(bot_bye)))
 
 
-    elif (req == 'autre recherche'):
+    elif (re.search(r"(.*autres? recherches?.*)|(.*(re)?cherche.?.*autres?.*)" ,req)):
         user['contexte'] = ''
         liste_res.append(create_par_msg("Ok que cherchez vous ? des produits ou des producteurs?:"))
 
@@ -100,6 +100,7 @@ def get_response(req,user):
 
     else:
         liste_res.append(create_par_msg("Désolé mais je n'ai pas compris"))
+        liste_res.append(create_par_msg("Demandez à faire une autre recherche si vous le désirez."))
     
     # debug
     print(liste_res)
